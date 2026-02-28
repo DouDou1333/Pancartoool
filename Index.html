@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pancartoool - TOTAL CONTROL OMEGA (LOGS)</title>
+    <link rel="manifest" href="manifest.json">
     <style>
         :root { --neon: #00ff41; --bg: #050505; --panel: #111; --danger: #ff0000; --gold: #ffff00; --blue: #00bfff; --apple: #ffffff; --auto: #00ffff; }
         body { margin: 0; padding: 10px; background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         .status-bar { background: #002200; padding: 8px; border: 1px solid var(--neon); display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 8px; }
-        #console { flex-grow: 1; border: 1px solid var(--neon); background: #000; padding: 10px; overflow-y: auto; font-size: 0.7rem; margin-bottom: 8px; line-height: 1.2; word-break: break-all; }
+        #console { flex-grow: 1; border: 1px solid var(--neon); background: #000; padding: 10px; overflow-y: auto; font-size: 0.7rem; margin-bottom: 8px; line-height: 1.2; }
         .log { border-left: 2px solid #222; padding-left: 5px; margin-bottom: 2px; }
         .success { color: var(--gold); } .err { color: var(--danger); font-weight: bold; } .info { color: var(--blue); } .nuke { color: #ff00ff; font-weight: bold; } .auto { color: var(--auto); font-weight: bold; }
         .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; overflow-y: auto; padding-bottom: 15px; }
@@ -78,6 +79,16 @@
     </div>
 
     <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(reg => {
+                    console.log('SW registered', reg);
+                }).catch(err => {
+                    console.log('SW registration failed', err);
+                });
+            });
+        }
+
         const consoleEl = document.getElementById('console');
         const devStatus = document.getElementById('devStatus');
         let device = null, epOut = null, epIn = null, autoInterval = null, readLoop = null;
