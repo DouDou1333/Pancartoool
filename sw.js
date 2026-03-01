@@ -1,29 +1,18 @@
-const CACHE_NAME = 'pancartoool-cache-v1';
-const urlsToCache = [
-    '/',
-    'index.html',
-    'manifest.json'
-    // Ajoutez d'autres fichiers comme des icônes si présents
-];
-
-self.addEventListener('install', function(event) {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(function(cache) {
-                console.log('Opened cache');
-                return cache.addAll(urlsToCache);
-            })
-    );
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open('pancartoool-cache').then(cache => {
+      return cache.addAll([
+        '.',
+        'index.html'
+      ]);
+    })
+  );
 });
 
-self.addEventListener('fetch', function(event) {
-    event.respondWith(
-        caches.match(event.request)
-            .then(function(response) {
-                if (response) {
-                    return response;
-                }
-                return fetch(event.request);
-            })
-    );
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request).then(response => {
+      return response || fetch(e.request);
+    })
+  );
 });
